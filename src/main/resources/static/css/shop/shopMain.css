@@ -1,0 +1,279 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Noto+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+*{
+	margin: 0;
+	font-family: NotoSans;
+}
+li,ul{
+	list-style-type: none;
+}
+.shop-wrap{
+	width: 100%;
+	margin: 0 auto;
+	background-color:#000000;
+}
+.shop-main-wrap{
+	width: 1300px;
+	overflow: hidden;
+	background-color: inherit;
+	margin: 0 auto;
+	clear: both;
+	padding-bottom: 100px;
+}
+.shop-aside-container{
+	width: 13%;
+	float: left;
+	position: relative;
+	background-color: inherit;
+	top: 80px;
+
+}
+.shop-main-coontainer{
+	width: 87%;
+	float: right;
+	background-color: inherit;
+}
+.title{
+	font-size: 24px;
+	font-weight: 900;
+	display: inline-block;
+	margin: 80px 0px 10px 80px;
+}
+
+.title :nth-child(1) {
+	color: #ffffff;
+	display: block;
+	float: left;
+	margin-right: 5px;
+}
+.title :nth-child(2) {
+	color: #F4A7BB;
+	display: block;
+	float: right;
+}
+.shop-aside-title{
+	font-weight: bold;
+	font-size:20px;
+	color: #ffffff;
+	width: 80%;
+	height: 50px;
+	padding: 0 20px;
+	line-height:50px;
+}
+.aside-menu{
+	width: 80%;
+	height: 50px;
+	color: #ffffff;
+	font-weight: 500;
+	font-size:18px;
+	padding: 0 20px;
+	line-height:50px;
+}
+
+.aside-menu:hover{
+	background-color: #F4A7BB;
+	color: #000000;
+	font-weight: bold;
+}
+
+.click {
+	background-color: #F4A7BB;
+	color: #000000;
+	font-weight: bold;
+}
+
+
+/**/
+
+/* Utilities */
+.flow{
+	margin-left: 85px;
+}
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--auto-grid-min-size, 14rem), 1fr)
+  );
+  grid-gap: var(--auto-grid-gap, 0);
+  padding: 0;
+}
+
+.flow > * + * {
+  margin-top: var(--flow-space, 1em);
+}
+
+/* Composition */
+.team {
+  --flow-space: 2em;
+}
+
+/* Blocks */
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 1/1;
+  position: relative;
+  padding: 1.5rem;
+  color: #ffffff;
+  backface-visibility: hidden;
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid #F4A7BB20;
+}
+
+.profile::before,
+.profile::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  /*inset: 0;*/
+  top: 0;
+  left: 0;
+}
+
+.profile::before {
+  background: linear-gradient(
+    to top,
+    hsl(0 0% 0% / 0.79) 0%,
+    hsl(0 0% 0% / 0.787) 7.8%,
+    hsl(0 0% 0% / 0.779) 14.4%,
+    hsl(0 0% 0% / 0.765) 20.2%,
+    hsl(0 0% 0% / 0.744) 25.3%,
+    hsl(0 0% 0% / 0.717) 29.9%,
+    hsl(0 0% 0% / 0.683) 34.3%,
+    hsl(0 0% 0% / 0.641) 38.7%,
+    hsl(0 0% 0% / 0.592) 43.3%,
+    hsl(0 0% 0% / 0.534) 48.4%,
+    hsl(0 0% 0% / 0.468) 54.1%,
+    hsl(0 0% 0% / 0.393) 60.6%,
+    hsl(0 0% 0% / 0.31) 68.3%,
+    hsl(0 0% 0% / 0.216) 77.3%,
+    hsl(0 0% 0% / 0.113) 87.7%,
+    hsl(0 0% 0% / 0) 100%
+  );
+  transition: 300ms opacity linear;
+}
+
+.profile::after {
+  background: linear-gradient(
+    45deg,
+    hsl(345 97% 63%  / 0.7) 0,
+    hsl(345 97% 63%  / 0) 100%
+  );
+  opacity: 0;
+  transition: 300ms opacity linear;
+}
+
+.profile > * {
+  z-index: 1;
+}
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: 0;
+  object-fit: cover;
+  transition: filter 200ms ease, transform 250ms linear;
+}
+
+.profile h3,
+.profile p {
+  transform: translateY(2ex);
+  padding: 0px;
+}
+
+.profile h3 {
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: 0.03ch;
+  transition: 300ms transform ease;
+}
+.price-text{
+	width: 100px;
+}
+.profile p {
+  font-size: 1rem;
+  float:left;
+  display:block;
+  font-weight: 500;
+}
+
+.profile p,
+.profile h3 {
+  opacity: 0;
+  transition: 300ms opacity linear, 300ms transform ease-in-out;
+}
+
+.profile:focus {
+  outline-offset: -0.5rem;
+}
+
+.profile:hover :is(h3, p),
+.profile:focus :is(h3, p) {
+  transform: none;
+}
+
+.profile:hover::after,
+.profile:focus::after,
+.profile:hover::before,
+.profile:focus::before {
+  opacity: 0.7;
+}
+
+.profile:hover p,
+.profile:focus p,
+.profile:hover h3,
+.profile:focus h3  {
+  opacity: 1;
+  transition-delay: 200ms;
+}
+.select-sort{
+	display:block;
+	float: right;
+	position: relative;
+	top: 88px;
+}
+.sort-option{
+	border: 1px solid #F8D8E3 ;
+	background-color: #000000;
+	color: #F8D8E3;
+	height: 25px;
+	font-weight: 500;
+	font-size:12px;
+	font-family: NotoSansKR;
+	text-align:center; 
+}
+
+/* Pagination links */
+.pagination{
+	margin: 60px auto 0px;
+	position: relative;
+	left: 500px;
+}
+.pagination a {
+  color: #ffffff;
+  float: left;
+  padding: 4px 8px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+/* Style the active/current link */
+.pagination a.active {
+  background-color: #F4A7BB;
+  color: #ffffff;
+}
+
+/* Add a grey background color on mouse-over */
+.pagination a:hover:not(.active) {background-color: #F4A7BB80;color: #ffffff;}
+
+
+   

@@ -1,0 +1,247 @@
+@charset "UTF-8";
+#body{
+	  background-color: #000000;
+}
+img {
+  display: block;
+  width: 100%;
+  height: 100px;
+  margin: auto;
+  
+}
+a{
+	color: #F4A7BB;
+}
+.cart {
+  width: 80%;
+  margin: 80px auto;
+  padding: 30px;
+  background-color: #000000;
+}
+
+.cart ul {
+  color: #ffffff;
+  padding: 30px;
+  margin-bottom: 50px;
+  border: #F4A7BB solid 1px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.cart ul :first-child {
+  color: #F4A7BB;
+}
+
+table {
+  border-top: solid 1.5px #F4A7BB;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+thead {
+  text-align: center;
+  font-weight: bold;
+}
+
+tbody>tr {
+  text-align: center;
+  font-size: 12px;
+}
+
+tfoot>tr{
+	border-top: 1px solid #ffffff;
+	  font-weight: bold;
+	
+}
+td {
+  padding: 15px 0px;
+  border-bottom: 1px solid #000000;
+}
+
+
+.cart__list__detail :nth-child(3) a {
+  font-size: 12px;
+}
+
+.cart__list__detail :nth-child(3) p {
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+.cart__list__detail td:nth-child(1){
+	width: 60px;
+}
+.cart__list__detail td:nth-child(2){
+	background-color: #F4A7BB;
+	width: 150px;
+	height: 40px;
+}
+
+ td:nth-child(3),
+ td:nth-child(4),
+ td:nth-child(5){
+	text-align: left;
+	padding-left: 50px;
+}
+.price {
+  font-weight: bold;
+}
+
+.cart__mainbtns {
+  width: 420px;
+  padding-top: 40px;
+  display: block;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.cart__bigorderbtn {
+  width: 200px;
+  height: 50px;
+  font-size: 16px;
+  margin: auto;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.cart__bigorderbtn.left {
+  background-color: #000000;
+  border: 1px #F4A7BB solid;
+  color: #F4A7BB ;
+}
+
+.cart__bigorderbtn.right {
+  background-color: #F4A7BB;
+  color: white;
+  border: none;
+}
+.cart__optionbtn{
+	margin-bottom: 10px;
+	float: right;
+}
+.cart__optionbtn button{
+	border: none;
+	color: #ffffff;
+	font-weight: 600;
+	font-size:10px;
+	padding:  5px 10px;
+	border-radius: 5px;
+}
+h1{
+	color: #ffffff;	
+	margin-bottom: 40px;
+	font-size: 40px;
+	font-weight: 900;
+}
+/**gradaion*/
+.moving-grad {
+  background: linear-gradient(270deg, #FF3166, #F8D8E3);
+  background-size: 200% 200%;
+  animation: MoveGrad 5s ease infinite;
+}
+
+
+@keyframes MoveGrad {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/***/
+.checkbox-animate{
+	position: relative;
+	top: -4px;
+}
+
+.checkbox-animate label {
+    position: relative;
+    cursor: pointer;
+}
+.checkbox-animate label input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.input-check {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #F8D8E3;
+    position: relative;
+    top: 6px;
+    margin-right: 7px;
+    transition: 0.4s;
+}
+
+.input-check::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 3px;
+    border-bottom: 2px solid #FF316670;
+    border-left: 2px solid #FF316670;
+    transform: scale(0) rotate(-45deg);
+    position: absolute;
+    left: -1px;
+    transition: 0.4s;
+}
+
+.checkbox-animate label input:checked ~ .input-check {
+    background-color: #F8D8E3;
+    border-color: #F8D8E3;
+    animation-name: input-animate;
+    animation-duration: 0.7s;
+}
+
+.checkbox-animate label input:checked ~ .input-check::before {
+    transform: scale(1) rotate(-45deg);
+    animation-name: input-check;
+    animation-duration: 0.2s;
+    animation-delay: 0.3s;
+}
+
+@keyframes input-animate {
+    0% {
+        transform: scale(1);
+    }
+    40%{
+        transform: scale(1.3,0.7);
+    }
+    55% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(1.2,0.8);
+    }
+    80% {
+        transform: scale(1);
+    }
+    90% {
+        transform: scale(1.1,0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes input-check {
+    0% {
+        transform: scale(0) rotate(-45deg);
+    }
+    100% {
+        transform: scale(1) rotate(-45deg);
+    }
+}

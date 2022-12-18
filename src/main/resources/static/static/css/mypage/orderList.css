@@ -1,0 +1,157 @@
+.accordionItem{
+    width:100%;
+    font-size: 12px;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+.accordionWrapper{
+	overflow-y: scroll;
+    max-height: 500px;
+}
+.accordionItemHeading{
+    cursor:pointer;
+    padding:10px;
+    background:#000000;
+    color:#fff;
+    width:100%;
+	border: 1px solid #fff;
+	text-align:center;
+
+
+}
+.close .accordionItemContent{
+    height:0px;
+    transition:height 1s ease-out;
+	transform: scaleY(0);
+    float:left;
+    display:block;
+   
+    
+}
+.titleTable{
+    background:#000000;
+    color:#fff;
+    width:100%;
+	border: 1px solid #fff;
+    box-sizing: border-box;
+    font-size:14px;
+    padding: 10px 0px;
+    font-weight: 500;
+}
+table{
+	width: 100%;
+	
+}
+.open .accordionItemContent{
+	font-size:12px;
+    padding: 10px 0px;
+    text-align: center;
+    background-color: #F8D8E350;
+    border: 1px solid #F4A7BB;
+    width: 100%;
+    display:block;
+	transform-origin: top;
+	transition: transform 0.4s ease;
+    box-sizing: border-box;
+    color: #ffffff;
+    
+}
+::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지 */
+}
+.open .accordionItemHeading{
+    margin:0px;      
+    background-color: #F4A7BB;
+    border: 1px solid #F4A7BB;
+    font-size:13px;
+    color: #000000;
+    font-weight: 600;
+}
+.orderDetail-title{
+	color: #F4A7BB;
+	margin: 0 auto;
+	width: 91%;
+	font-size: 14px;
+	font-weight: 600;
+}
+/*box*/
+.likeList-wrap{
+padding: 30px 20px;
+width: 900px;
+margin: 100px 50px 100px 80px;
+border: 1px solid;
+}
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 90deg;
+  inherits: true;
+}
+
+@property --gradX {
+  syntax: '<percentage>';
+  initial-value: 50%;
+  inherits: true;
+}
+
+@property --gradY {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: true;
+}
+
+:root {
+	--d: 2500ms;
+	--angle: 90deg;
+	--gradX: 100%;
+	--gradY: 50%;
+	--c1: #F4A7BB;
+	--c2: #F4A7BB10;
+}
+
+.box {
+	border: 0.1rem solid;
+	border-image: radial-gradient(ellipse at var(--gradX) var(--gradY), var(--c1), var(--c1) 10%, var(--c2) 40%) 30;
+	animation: borderRadial var(--d) linear infinite forwards;
+}
+
+@keyframes borderRotate {
+	100% {
+		--angle: 420deg;
+	}
+}
+
+@keyframes borderRadial {
+	20% {
+		--gradX: 100%;
+		--gradY: 50%;
+	}
+	40% {
+		--gradX: 100%;
+		--gradY: 100%;
+	}
+	60% {
+		--gradX: 50%;
+		--gradY: 100%;
+	}
+	80% {
+		--gradX: 0%;
+		--gradY: 50%;
+	}
+	100% {
+		--gradX: 50%;
+		--gradY: 0%;
+	}
+}
+
+.userInfo-title{
+  	color: #F4A7BB;
+	font-weight: 700;
+	width: 650px;
+	padding: 0px 30px;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 30px;
+	margin-left: 30px;
+	margin-bottom: 50px;
+	}
+	

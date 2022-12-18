@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<definition name="layout" template="/WEB-INF/tiles/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/> 
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp"/> 
+		<put-attribute name="popup-menu" value="/WEB-INF/tiles/popupMenu.jsp"/>	</definition>
+	
+	<definition name="boardLayout" template="/WEB-INF/tiles/boardLayout.jsp">
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/> 
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp"/> 
+		<put-attribute name="popup-menu" value="/WEB-INF/tiles/popupMenu.jsp"/>
+		<put-attribute name="chat" value="/WEB-INF/tiles/chat/chat.jsp"/>
+	</definition>
+	
+	<definition name="layout_backgrond" template="/WEB-INF/tiles/layoutBackground.jsp">
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/> 
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp"/> 
+		<put-attribute name="popup-menu" value="/WEB-INF/tiles/popupMenu.jsp"/>
+	</definition>
+	
+	<definition name="Mypage_Layout" template="/WEB-INF/tiles/myPageLayout.jsp">
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp"/> 
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp"/> 
+		<put-attribute name="popup-menu" value="/WEB-INF/tiles/popupMenu.jsp"/>
+	</definition>
+	
+	
+	<!-- shop -->
+	<definition name="shop/main" extends="layout_backgrond">
+		<put-attribute name="content" value="/WEB-INF/views/shop/main.jsp"/>
+		<put-attribute name="banner" value="/WEB-INF/views/shop/mainBanner.jsp"/>
+	</definition> 
+	<definition name="shop/categoryView" extends="layout_backgrond">
+		<put-attribute name="content" value="/WEB-INF/views/shop/categoryView.jsp"/>
+		<put-attribute name="banner" value="/WEB-INF/views/shop/mainBanner.jsp"/>
+	</definition> 
+	
+	<definition name="shop/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/shop/{1}.jsp"/>
+	</definition> 
+	
+	<!-- board -->
+	<definition name="board/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/board/{1}.jsp"/>
+	</definition> 
+	<definition name="board/main" extends="boardLayout">
+		<put-attribute name="content" value="/WEB-INF/views/board/main.jsp"/>
+	</definition> 
+	
+	<!-- admin -->
+	<definition name="admin/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/admin/{1}.jsp"/>
+	</definition> 
+	
+	<!-- mypage -->
+	<definition name="mypage/**" extends="Mypage_Layout">
+		<put-attribute name="content" value="/WEB-INF/views/mypage/{1}.jsp"/>
+		<put-attribute name="aside" value="/WEB-INF/views/mypage/aside.jsp"/>
+		<put-attribute name="banner" value="/WEB-INF/views/mypage/banner.jsp"/>
+	</definition> 
+	
+	<!-- error/success -->
+	<definition name="error/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/error/{1}.jsp"/>
+	</definition> 
+	<definition name="success/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/success/{1}.jsp"/>
+	</definition>
+	<definition name="system/loginForm" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/system/loginForm.jsp"/>
+	</definition>
+	<definition name="system/signup" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/system/signup.jsp"/>
+	</definition>
+	
+	<!-- info -->
+	<definition name="info/main" extends="layout_backgrond">
+		<put-attribute name="content" value="/WEB-INF/views/info/main.jsp"/>
+		<put-attribute name="banner" value="/WEB-INF/views/info/mainBanner.jsp"/>
+	</definition> 
+	<definition name="info/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/info/{1}.jsp"/>
+	</definition> 
+	<definition name="/main/**" extends="layout">
+		<put-attribute name="content" value="/WEB-INF/views/main/main.jsp"/>
+	</definition> 
+</tiles-definitions>
