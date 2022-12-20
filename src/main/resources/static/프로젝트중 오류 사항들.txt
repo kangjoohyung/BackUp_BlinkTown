@@ -1,0 +1,16 @@
+KOSTA248 final 프로젝트 진행중 오류사항들 기록
+
+1 : 테스트할 때 인수 넣으면, 안 됨
+2 : 테스트할 때 리턴 인수도 넣으면 안 됨
+3 : mapping하는 entity가 List로는 insert가 한 번에 안됨 -> 담기기는 하지만 save가 종류가 달라서인지 안됨.
+->saveAll이용해서 따로 insert해야함
+4 : Domain 잘못되면 서버 켜기조차 불가능
+5 : Repository의 쿼리문에 문법이 안맞아도 안됨
+6 : LocalDateTime 사용시 꼭 시까지 표시해야 함. 입력할때(parse할때) 시를 입력 안하면 parse에 오류가 남
+
+7.mapped by 양방향 설정 : Json으로 보낼때 순환참조 발생 , @JsonIgnore설정(Mapped by 설정한 변수 무시하기)
+
+8.json관련 ajax 통신시 오류 : Serialization 어쩌구 발생시->해결책 다음중 하나
+ 1) fetch를 LAZY->EAGER로 변경 
+ 2) @JsonIgnore로 무시하기
+   ->만약 필요한 정보에 대해 무시한다면 수동으로 또 받아야 함

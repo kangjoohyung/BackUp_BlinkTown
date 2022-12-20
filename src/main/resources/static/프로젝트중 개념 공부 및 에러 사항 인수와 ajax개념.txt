@@ -1,0 +1,73 @@
+AJAX/JSON관련 정리 및 에러사항 정리
+
+1. form data VO로 받기
+-> 인수에 넣으면 자동 매핑
+
+2. form data ArrayList로 받기
+-> 인수에 넣고 인수 앞에 @RequestParam 선언, 이름 똑같이 놓기(?)
+
+3. Ajax data VO로 받기 
+인수 앞에 @RequestBody 넣고 인수명 VO로 똑같이(?)
+
+4. Ajax data Array로 받기
+인수 앞에 @RequestBody 넣고 List인수로
+
+->즉 일반Controller에서 Form은 RequestParam을, ajax에서는 RequestBody로
+
+5. 값 넘길때(ajax) : @ResponseBody 사용(RequestBody 사용 안해도 되는듯?)
+-> 리턴값에 값을 넣는다
+5-1)
+Map<String, Object> map=new HashMap<String, Object>();
+map.put("key값", object);
+return map;
+5-2)
+List<MainDTO> list=service.main_list(map);
+return list;
+
+즉, 컨트롤러 입장에서 보낼때 responseBody
+받을때 requestBody 사용
+
+
+6. 값 넘길때 ajax안쪽에도 토큰이 있어야함
+6-1)<meta name="_csrf_header" th:content="${_csrf.headerName}">
+<meta name="_csrf" th:content="${_csrf.token}">
+6-2)var header = $("meta[name='_csrf_header']").attr('content');
+var token = $("meta[name='_csrf']").attr('content');
+ 
+$.ajax({
+    url: url,
+    beforeSend: function(xhr){
+        xhr.setRequestHeader(header, token);
+    },
+
+-------------------------------------------------
+7. VO , DTO , Domain의 개념 분리 필요
+->Value Object / Data Transfer / Domain
+MVC구조에 따른 각 사용 위치와 역할이 조금씩 다름
+
+8. 양방향 매핑관계에서의 JSON 사용
+양방향 매핑관계의 Entity(Domain)을 Json을 사용하여 넘기고자 할 때,
+참조설정이 되어있으면 순환참조 문제가 발생한다.->Mapped by 아니어도 JoinColumn부분 전부때문인듯
+해결책1) DTO사용(매핑설정 없게끔)
+2) @JsonIgnore 설정 -> Mapped by부분(+JoinColumn 에선 안써도 됨->확인함) 
+
+9. 리턴되는 값 (컨트롤러에서 보내오는 값) : dataType -> collection사용시 json / 일반 객체는 text (void일때도 text)
+
+10. 컨트롤러로 보낼때 타입 json으로 보낼때 설정 : contentType : "application/json" 
+
+11. security 사용시 토큰 보내기 : "${_csrf.parameterName}": "${_csrf.token}"
+
+12.폼 양식 보내기 : $("#ordersForm").serialize()
+
+13.json으로 보낼땐 ajax속에서 json형태로 보내야하고, 그렇게 왔을때 @RequestBody를 붙여야 인식한다.
+->List라고 다 json이 아니다. 
+
+14.list로 보내서 담고싶다면, DTO를 사용하여 리스트를 만들던지 하고, 리스트에 대한 내용들을 반복문으로 꺼내야 받을때 알아서 리스트로 받아진다.
+
+15.지연로딩으로 인한 json serializing문제가 발생할 수 있는데, 그런경우 즉시로딩으로 바꾸면 해결된다. 혹은 ignore로 처리
+
+16.객체 리스트 등 parse가 되는 상태로 전달할 때에는 name에 product.productCode / (반복문에서)productList[0].productCode 
+이런 식으로 실제 꺼내 쓸때처럼 들어가 있어야 자동 parsing이 된다. (jsp에서 저렇게 되어있어야 컨트롤러로 인수로 받을때 자동 파싱가능)
+
+17.프로젝션
+domain의 컬럼 외의 값을 추가로 가져오거나 일부만 가져올때 interface로 사용하여 가져올 수 있는데 이때에는 한개씩만 가져올 수 있다. 여러개 ->List로 사용 가능
