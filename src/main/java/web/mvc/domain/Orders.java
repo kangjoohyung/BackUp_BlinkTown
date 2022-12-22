@@ -70,4 +70,9 @@ public class Orders {
 	@JsonIgnore 
 	@OneToMany(mappedBy = "orders", cascade = CascadeType.ALL) 
 	private List<Orderdetails> orderdetailsList;
+	
+	//LAZY , 주문결제-취소시 삭제 필요하여 cascade설정
+	@JsonIgnore
+	@OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+	private List<Payment> paymentList;
 }
