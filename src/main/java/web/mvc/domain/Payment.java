@@ -3,11 +3,13 @@ package web.mvc.domain;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,13 +34,18 @@ public class Payment {
 	private Long paymentNo;
 	
 	private String impUid; //결제후 전달받는 결제번호
+
+	private int countPrice; //결제 금액 및 취소금액
 	
 //	@ManyToOne(fetch = FetchType.LAZY)
 	@ManyToOne
 	@JoinColumn(name="orders_no")
 	private Orders orders; //양방향 설정후 cascade설정->차후 주문목록 조회시 편리하게 조회할 예정
 	
-	private int countPrice; //결제 금액 및 취소금액
+//	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne //기본eager
+	@JoinColumn(nullable = true, name="orderdetails_no")
+	private Orderdetails orderdetails;
 	
 	private String paymentType; //결제수단-카카오결제,페이팔 등등
 	
