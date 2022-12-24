@@ -297,7 +297,7 @@ public class OrdersController {
 		int verifyAmount=resultData.getResponse().getAmount().intValueExact();
 		
 		//금액을 비교하여 검증(금액 다를시 주문내역 삭제 및 재고량 원복후 runtimeException발생시킴)
-		ordersService.verifyOrders(ordersNo, verifyAmount, STATUS_AFTER);
+		ordersService.verifyOrders(ordersNo, verifyAmount, STATUS_AFTER, imp_uid);
 		
 		//이상 없을시 장바구니 세션 삭제->dto삭제 메소드 호출
 //		Users users=(Users)principal;

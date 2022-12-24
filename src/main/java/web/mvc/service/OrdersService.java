@@ -80,7 +80,7 @@ public interface OrdersService {
 	 * @param ordersNo
 	 * @param verifyAmount
 	 */
-	void verifyOrders(Long ordersNo, int verifyAmount, String status) throws Exception;
+	void verifyOrders(Long ordersNo, int verifyAmount, String status, String imp_uid) throws Exception;
 	
 	/**
 	 * 삭제 메소드 분리
@@ -89,4 +89,10 @@ public interface OrdersService {
 	 * 2) 주문 실패시 사용
 	 */
 	void deleteOrders(Long ordersNo);
+	
+	/**
+	 * 221224추가
+	 * 결제정보 저장
+	 */
+	void insertPayment(Orders orders, String imp_uid, int amount);
 }
