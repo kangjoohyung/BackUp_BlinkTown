@@ -59,7 +59,7 @@ public class Orders {
 	@Column(nullable=false, length = 6)
 	private String ordersZipcode; 
 	@Column(nullable=false, length = 20)
-	private String ordersStatus;
+	private String ordersStatus; //주문상태 : 결제중/주문완료(확장중 : /부분환불/주문취소, 확장계획 : /배송중/배송완료)
 	
 	@Column(nullable=false)
 	@CreationTimestamp
