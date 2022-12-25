@@ -64,6 +64,8 @@ public class Orders {
 	@Column(nullable=false)
 	@CreationTimestamp
 	private LocalDateTime ordersDate;
+
+	private String paymentType; //221226 확장대비하여 결제수단 컬럼 추가 : 카카오결제,페이팔 등등
 	
 	//LAZY , 주문결제-취소시 삭제 필요하여 cascade설정
 //	@JsonManagedReference //안됨
