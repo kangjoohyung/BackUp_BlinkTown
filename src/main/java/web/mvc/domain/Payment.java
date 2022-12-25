@@ -47,8 +47,6 @@ public class Payment {
 	@JoinColumn(nullable = true, name="orderdetails_no")
 	private Orderdetails orderdetails;
 	
-	private String paymentType; //결제수단-카카오결제,페이팔 등등
-	
 	@CreationTimestamp//(수정이 아닌 추가 레코드 생성이기에 Creation으로 사용-UpdateTimestamp사용안함)
 	private LocalDateTime paymentDate; //결제 및 변동-추가사항에 관한 시간
 	
