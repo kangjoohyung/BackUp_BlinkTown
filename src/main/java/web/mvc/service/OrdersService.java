@@ -94,5 +94,5 @@ public interface OrdersService {
 	 * 221224추가
 	 * 결제정보 저장
 	 */
-	void insertPayment(Orders orders, String imp_uid, int amount);
+	void insertPayment(Orders orders, String imp_uid, int amount, Orderdetails orderdetails/*, Long orderdetailsNo*/);
 }
