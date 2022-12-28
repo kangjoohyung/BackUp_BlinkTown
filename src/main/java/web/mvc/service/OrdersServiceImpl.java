@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import web.mvc.domain.Orderdetails;
 import web.mvc.domain.Orders;
+import web.mvc.domain.Payment;
 import web.mvc.domain.Product;
 import web.mvc.domain.Users;
 import web.mvc.repository.OrderdetailsRepository;
 import web.mvc.repository.OrdersRepository;
+import web.mvc.repository.PaymentRepository;
 import web.mvc.repository.ProductRepository;
 import web.mvc.repository.UsersRepository;
 
@@ -30,6 +33,7 @@ public class OrdersServiceImpl implements OrdersService {
 	private final ProductRepository productRep;
 	private final OrderdetailsRepository orderdetailsRep;
 	private final UsersRepository userRep;
+	private final PaymentRepository paymentRep;
 	
 	private final UsersService usersService;
 	private final ProductService productService;
@@ -162,7 +166,7 @@ public class OrdersServiceImpl implements OrdersService {
 	} //insertOrdersOrderdetails end
 
 	@Override
-	public void verifyOrders(Long ordersNo, int verifyAmount, String status) throws Exception {
+	public void verifyOrders(Long ordersNo, int verifyAmount, String status, String imp_uid) throws Exception {
 		//비교하기 위해 총합계 꺼내기
 		Orders orders=ordersRep.findById(ordersNo).orElse(null);
 		List<Orderdetails> orderdetailsList=orders.getOrderdetailsList();
@@ -179,10 +183,14 @@ public class OrdersServiceImpl implements OrdersService {
 		}else {
 			System.out.println("금액 달라 삭제 호출");
 			//DB금액과 결제금액이 다를 경우 주문 삭제 호출 : 보안상 위조된 값
-			this.deleteOrders(ordersNo);
+			deleteOrders(ordersNo);
 			//주문 삭제후 트랜젝션과는 관련 없는 Exception 일으키기
 			throw new Exception("위조된 결제 시도 : FBI WARNING");
 		}//검증실패시 기능 끝
+		
+		//결제정보 저장 메소드 호출
+		insertPayment(orders, imp_uid, amount, null);
+		
 	}//verifyOrders end
 
 	@Override
@@ -207,6 +215,29 @@ public class OrdersServiceImpl implements OrdersService {
 		System.out.println("삭제 끝");
 	}
 
+	@Override
+	public void insertPayment(Orders orders, String imp_uid, int amount, Orderdetails orderdetails/*, Long orderdetailsNo*/) {
+		if(orderdetails==null && amount>0) { 
+			//최초 생성 및 주문상세 없을 때 : 결제 검증메소드에서 결제번호를 입력받음
+			paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).build());
+		}
+		else if(orderdetails==null && amount<0) {
+			//전체 환불의 경우 (주문상세 필요없어서 null일 때, 금액이-일 때)
+			paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).build());
+			//주문상세 테이블의 레코드 변경 : 전체 0으로
+			List<Orderdetails> orderdetailsList=new ArrayList<Orderdetails>();
+			orderdetailsList=orders.getOrderdetailsList();
+			for(Orderdetails details : orderdetailsList) {
+				details.setOrderdetailsPrice(0);//집계 안나오게 0처리
+			}
+		}
+		else { //최초 이후 수정 : insert로 추가 레코드 생성, 상세주문 항목 추가, 금액이-이면서 부분환불
+//			Orderdetails orderdetails=new Orderdetails();
+//			orderdetails=orderdetailsRep.findById(orderdetailsNo);
+			paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).orderdetails(orderdetails).build());
+			//주문상세 테이블의 레코드 변경
+			orderdetails.setOrderdetailsPrice(0);//집계 안나오게 0처리
+		}
+	}
 
-	
 }
