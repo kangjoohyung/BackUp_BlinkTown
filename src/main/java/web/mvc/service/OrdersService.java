@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import web.mvc.domain.Orderdetails;
 import web.mvc.domain.Orders;
+import web.mvc.domain.Payment;
 import web.mvc.domain.Users;
 import web.mvc.dto.Cart;
 
@@ -95,4 +96,11 @@ public interface OrdersService {
 	 * 결제정보 저장
 	 */
 	void insertPayment(Orders orders, String imp_uid, int amount, Orderdetails orderdetails/*, Long orderdetailsNo*/);
+	
+	/**
+	 * 221229추가
+	 * orders로 결제정보 조회
+	 * 결제정보 여러개 있을수있어서 List로 조회
+	 */
+	List<Payment> findPaymentByOrders(Orders orders);
 }
