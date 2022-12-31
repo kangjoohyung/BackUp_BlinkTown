@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
@@ -37,9 +38,10 @@ public class OrdersVerifyController {
         return iamportClient.paymentByImpUid(imp_uid);
     }
 	
-	/** 차후 결제 취소 확장 하면 넣을 곳 */
+	/** 주문취소(전체환불) */
 	public void cancelByImpUid(String imp_uid) throws IamportResponseException, IOException{
-		
+		CancelData cancel=new CancelData(imp_uid, true);
+		iamportClient.cancelPaymentByImpUid(cancel);
 	}
 
 }
