@@ -240,4 +240,8 @@ public class OrdersServiceImpl implements OrdersService {
 		}
 	}
 
+	@Override
+	public List<Payment> findPaymentByOrders(Orders orders) {
+		return paymentRep.findByOrdersOrderByPaymentDateDesc(orders);
+	}
 }
