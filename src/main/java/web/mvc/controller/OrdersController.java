@@ -1,5 +1,6 @@
 package web.mvc.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
@@ -304,10 +306,19 @@ public class OrdersController {
 		cartService.deleteAllCart(session);
 		//장바구니DTO 삭제
 		}catch (Exception e) {
-			//결제취소 메소드 넣기
-			//일단 필요없으니 보류
+			//결제취소 메소드 넣기 (예외처리-try/catch)
+			try {
+				ordersVerifyController.cancelByImpUid(imp_uid);
+			} catch (IamportResponseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally {
 			System.out.println("오류 발생 : 결제금액 위조 (검증 실패)");
 			new RuntimeException("결제중 오류가 발생하였습니다");
+			}
 		}
 	}
 	
