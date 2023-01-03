@@ -103,4 +103,9 @@ public interface OrdersService {
 	 * 결제정보 여러개 있을수있어서 List로 조회
 	 */
 	List<Payment> findPaymentByOrders(Orders orders);
+	
+	/**
+	 * 주문상태 변경
+	 */
+	Orders updateOrdersStatus(Long ordersNo, String status);
 }
