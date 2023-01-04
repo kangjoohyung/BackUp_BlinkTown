@@ -244,4 +244,11 @@ public class OrdersServiceImpl implements OrdersService {
 	public List<Payment> findPaymentByOrders(Orders orders) {
 		return paymentRep.findByOrdersOrderByPaymentDateDesc(orders);
 	}
+
+	@Override
+	public Orders updateOrdersStatus(Long ordersNo, String status) {
+		Orders orders=ordersRep.findById(ordersNo).orElse(null);
+		orders.setOrdersStatus(status);
+		return orders;
+	}
 }
