@@ -459,6 +459,18 @@ public class OrdersController {
 		List<Orderdetails> orderdetailsList=ordersService.selectAllOrderdetails(ordersNo);
 		model.addAttribute("orderdetailsList", orderdetailsList);
 	}//관리자 주문 상세 끝
+	
+	/////////////////////////////////////////////////////////////
+	/**배송정보 변경*/
+//	@RequestMapping("/admin/orders/updateStatus/{ordersNo}/{status}")
+	public void updateStatus(@PathVariable Long ordersNo, @PathVariable String status) {
+		ordersService.updateOrdersStatus(ordersNo, status);
+	}
+	
+	/**주문 취소*/
+	
+	/**부분 환불*/
+	
 	/////////////////////////////////////////////////////////////
 	//테스트용 메소드들
 	/**테스트용*/
