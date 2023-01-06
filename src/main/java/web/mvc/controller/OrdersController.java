@@ -61,6 +61,8 @@ public class OrdersController {
 	
 	private final static String STATUS_BEFORE="결제중";
 	private final static String STATUS_AFTER="주문완료";
+	private final static String STATUS_ALL_CANCEL="주문취소";
+	private final static String STATUS_PART_CANCEL="부분환불";
 	
 	//유저 정보 받아오기 : Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
@@ -468,8 +470,16 @@ public class OrdersController {
 	}
 	
 	/**주문 취소*/
+//	@RequestMapping("/orders/allCancel/{ordersNo}")
+	public void allCancelOrders(@PathVariable Long ordersNo) {
+		//주문취소->상태변경, 주문금액->0, 결제->-토탈금액으로 변경
+	}
 	
 	/**부분 환불*/
+//	@RequestMapping("/orders/partCancel/{orderdetailsNo}")
+	public void partCancelOrderdetails(@PathVariable Long orderdetailsNo) {
+		//상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경
+	}
 	
 	/////////////////////////////////////////////////////////////
 	//테스트용 메소드들
