@@ -95,7 +95,7 @@ public interface OrdersService {
 	 * 221224추가
 	 * 결제정보 저장
 	 */
-	void insertPayment(Orders orders, String imp_uid, int amount, Orderdetails orderdetails/*, Long orderdetailsNo*/);
+	void insertPayment(Orders orders, String imp_uid, int amount, List<Orderdetails> orderdetails/*Orderdetails orderdetails*//*, Long orderdetailsNo*/);
 	
 	/**
 	 * 221229추가
@@ -114,9 +114,10 @@ public interface OrdersService {
 	 * 리팩토링 : 재고량 원복 메소드로 추가사용-> 검증구현시 취소 뿐만 아니고
 	 *         전체 환불, 부분 환불에 대응하도록 메소드 구현
 	 */
-	List<Orderdetails> recoverRelationOrders(Orders orders, List<Orderdetails> orderdetailsList);
+	List<Orderdetails> recoverRelationOrders(List<Orderdetails> orderdetailsList);
 	
 	/**
 	 * 주문 금액 0처리
 	 */
+	List<Orderdetails> refundOrders(List<Orderdetails> orderdetailsList);
 }
