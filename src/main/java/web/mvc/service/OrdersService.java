@@ -108,4 +108,15 @@ public interface OrdersService {
 	 * 주문상태 변경
 	 */
 	Orders updateOrdersStatus(Long ordersNo, String status);
+	
+	/**
+	 * 관계데이터 원복 : 주문 삭제 및 전체취소, 부분환불시 원복사항
+	 * 리팩토링 : 재고량 원복 메소드로 추가사용-> 검증구현시 취소 뿐만 아니고
+	 *         전체 환불, 부분 환불에 대응하도록 메소드 구현
+	 */
+	List<Orderdetails> recoverRelationOrders(Orders orders, List<Orderdetails> orderdetailsList);
+	
+	/**
+	 * 주문 금액 0처리
+	 */
 }
