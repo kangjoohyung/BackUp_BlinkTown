@@ -216,7 +216,7 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public void insertPayment(Orders orders, String imp_uid, int amount, Orderdetails orderdetails/*, Long orderdetailsNo*/) {
+	public void insertPayment(Orders orders, String imp_uid, int amount, List<Orderdetails> orderdetails/*Orderdetails orderdetails*//*, Long orderdetailsNo*/) {
 		if(orderdetails==null && amount>0) { 
 			//최초 생성 및 주문상세 없을 때 : 결제 검증메소드에서 결제번호를 입력받음
 			paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).build());
@@ -232,11 +232,16 @@ public class OrdersServiceImpl implements OrdersService {
 			}
 		}
 		else { //최초 이후 수정 : insert로 추가 레코드 생성, 상세주문 항목 추가, 금액이-이면서 부분환불
+			//아마 orders를 null로 넘기게 구현할듯
 //			Orderdetails orderdetails=new Orderdetails();
 //			orderdetails=orderdetailsRep.findById(orderdetailsNo);
-			paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).orderdetails(orderdetails).build());
-			//주문상세 테이블의 레코드 변경
-			orderdetails.setOrderdetailsPrice(0);//집계 안나오게 0처리
+//			List<Payment> beforePaymentList=paymentRep.findByOrdersOrderByPaymentDateDesc(orders);
+//			imp_uid=beforePaymentList.get(0).getImpUid();
+			for(Orderdetails details : orderdetails) {
+				paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).orderdetails(details).build());
+				//주문상세 테이블의 레코드 변경
+				details.setOrderdetailsPrice(0);//집계 안나오게 0처리
+			}
 		}
 	}
 
@@ -250,5 +255,18 @@ public class OrdersServiceImpl implements OrdersService {
 		Orders orders=ordersRep.findById(ordersNo).orElse(null);
 		orders.setOrdersStatus(status);
 		return orders;
+	}
+
+	@Override
+	public List<Orderdetails> recoverRelationOrders(List<Orderdetails> orderdetailsList) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
+
+	@Override
+	public List<Orderdetails> refundOrders(List<Orderdetails> orderdetailsList) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
