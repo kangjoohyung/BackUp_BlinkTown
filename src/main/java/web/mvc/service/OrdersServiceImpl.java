@@ -127,7 +127,6 @@ public class OrdersServiceImpl implements OrdersService {
 		this.selectCheckBeforeOrders(users, ordersProduct);
 		//이상없다면 Exception없이 빠져나옴
 		
-		String usersId=users.getUsersId();
 		ordersProduct.setUsers(users);
 
 		//1) 주문정보 insert
@@ -141,30 +140,49 @@ public class OrdersServiceImpl implements OrdersService {
 		List<Orderdetails> finishOrderdetailsList=orderdetailsRep.saveAll(orderdetailsList);
 		
 		//3) 연관 정보 변경-상품/유저
-		for(Orderdetails orderdetails : finishOrderdetailsList){
-			//상품 수정 기능구현을 위한 상품 조회
-			String getProdCode=orderdetails.getProduct().getProductCode();
-			Product product=productRep.findById(getProdCode).orElse(null);
-			//1)상품 멤버쉽카드라면 유저의 멤버쉽상태 변경+권한생성(member추가)
-			if(getProdCode.equals("M01")){//상품코드 String
-				Users dbUsers=userRep.findById(usersId).orElse(null);
-				//(도윤님 서비스 메소드를 사용)
-				usersService.updateUsersMemberShip(dbUsers, true);
-			}
-			//2)구매한 만큼의 재고량 감소(0이하거나 null일때는 작동 안 함)
-			if(product.getProductStock()>0){
-				//(보경님 상품 서비스 메소드를 사용)
-				int qty=orderdetails.getOrderdetailsQty();
-				productService.decreaseProductStock(getProdCode, qty);
-			}
-		}//연관 정보 변경 for문끝
+		updateRelationOrders(users, finishOrderdetailsList, true); //메소드로 분리, 리팩토링
 		
 		//주문번호로 결제호출 위해 컨트롤러로 리턴
 		finishOrders.setOrderdetailsList(finishOrderdetailsList);
 //		System.out.println("insert-service끝");//확인용
+		
 		return finishOrders;  
 	} //insertOrdersOrderdetails end
+	
+	@Override
+	public void updateRelationOrders(Users users, List<Orderdetails> orderdetailsList, boolean isBuy) {
+		for(Orderdetails orderdetails : orderdetailsList){
+			//상품 수정 기능구현을 위한 상품 조회
+			String getProdCode=orderdetails.getProduct().getProductCode();
+			Product product=productRep.findById(getProdCode).orElse(null);
+			
+			//1)구매 : 상품 멤버쉽카드라면 유저의 멤버쉽상태 변경+권한생성(member추가)
+			// + 취소,환불 : 원복(boolean으로 구분)
+			if(getProdCode.equals("M01")){//상품코드 String
+				//(도윤님 서비스 메소드를 사용)
+				usersService.updateUsersMemberShip(users, isBuy);
+			}
+			//2)구매 : 구매한 만큼의 재고량 감소(0이하거나 null일때는 작동 안 함)
+			if(product.getProductStock()>0 && isBuy==true){
+				//(보경님 상품 서비스 메소드를 사용)
+				int qty=orderdetails.getOrderdetailsQty();
+				productService.decreaseProductStock(getProdCode, qty);
+			}
+			//3)취소,환불 : 재고량 원복
+			else if(product.getProductStock()>=0 && isBuy==false) {
+				int qty=0-orderdetails.getOrderdetailsQty();					
+				productService.decreaseProductStock(getProdCode, qty);
+			}
+		}//연관 정보 변경 for문끝
 
+		for(Orderdetails orderdetails : orderdetailsList){
+			//1) 멤버쉽 카드라면 다시 회원 정보의 멤버쉽유무 0으로 수정+권한 설정 원복(member삭제)
+			if(orderdetails.getProduct().getProductCode().equals("M01")) {
+				usersService.updateUsersMemberShip(users, false);
+			}
+		}//주문관련 정보들 원복 끝
+	}
+	
 	@Override
 	public void verifyOrders(Long ordersNo, int verifyAmount, String status, String imp_uid) throws Exception {
 		//비교하기 위해 총합계 꺼내기
@@ -198,19 +216,12 @@ public class OrdersServiceImpl implements OrdersService {
 		System.out.println("삭제시작");//확인용 출력
 		Orders orders=ordersRep.findById(ordersNo).orElse(null);
 		List<Orderdetails> orderdetailsList=orders.getOrderdetailsList();
+		
 		//insert할때 변경했던 내용들 다시 원복
-		for(Orderdetails orderdetails : orderdetailsList){
-			//1) 멤버쉽 카드라면 다시 회원 정보의 멤버쉽유무 0으로 수정+권한 설정 원복(member삭제)
-			if(orderdetails.getProduct().getProductCode().equals("M01")) {
-				Users users=orders.getUsers();
-				usersService.updateUsersMemberShip(users, false);
-			}
-			//2) 재고량 원복
-			if(orderdetails.getProduct().getProductStock()>=0) {
-				int qty=(0-orderdetails.getOrderdetailsQty());					
-				productService.decreaseProductStock(orderdetails.getProduct().getProductCode(), qty);
-			}
-		}//주문관련 정보들 원복 끝
+		Users users=orders.getUsers();
+		updateRelationOrders(users, orderdetailsList, false);//취소,환불:false
+		
+		//삭제
 		ordersRep.delete(orders); //cascade설정으로 주문상세도 삭제됨
 		System.out.println("삭제 끝");
 	}
@@ -258,15 +269,8 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<Orderdetails> recoverRelationOrders(List<Orderdetails> orderdetailsList) {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
-
-	@Override
-	public List<Orderdetails> refundOrders(List<Orderdetails> orderdetailsList) {
-		// TODO Auto-generated method stub
+	public List<Orderdetails> updateAmountOrderdetails(List<Orderdetails> orderdetailsList) {
+		// 금액변경
 		return null;
 	}
 }
