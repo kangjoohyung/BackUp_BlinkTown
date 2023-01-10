@@ -240,12 +240,7 @@ public class OrdersServiceImpl implements OrdersService {
 			orderdetailsList=orders.getOrderdetailsList();
 			updateAmountOrderdetails(false, orderdetailsList, null, null);
 		}
-		else { //최초 이후 수정 : insert로 추가 레코드 생성, 상세주문 항목 추가, 금액이-이면서 부분환불
-			//아마 orders를 null로 넘기게 구현할듯
-//			Orderdetails orderdetails=new Orderdetails();
-//			orderdetails=orderdetailsRep.findById(orderdetailsNo);
-//			List<Payment> beforePaymentList=paymentRep.findByOrdersOrderByPaymentDateDesc(orders);
-//			imp_uid=beforePaymentList.get(0).getImpUid();
+		else { //부분환불
 			updateAmountOrderdetails(false, orderdetails, imp_uid, orders);
 		}
 	}
@@ -272,8 +267,8 @@ public class OrdersServiceImpl implements OrdersService {
 				paymentRep.save(Payment.builder().impUid(imp_uid)
 						.countPrice(details.getOrderdetailsPrice()).orders(orders)
 						.orderdetails(details).build());
-			}
-		}
+			}//if(isPart~~)끝
+		}//for문끝
 		return orderdetailsList;
 	}
 }
