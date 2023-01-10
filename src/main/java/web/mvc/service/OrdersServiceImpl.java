@@ -238,9 +238,7 @@ public class OrdersServiceImpl implements OrdersService {
 			//주문상세 테이블의 레코드 변경 : 전체 0으로
 			List<Orderdetails> orderdetailsList=new ArrayList<Orderdetails>();
 			orderdetailsList=orders.getOrderdetailsList();
-			for(Orderdetails details : orderdetailsList) {
-				details.setOrderdetailsPrice(0);//집계 안나오게 0처리
-			}
+			updateAmountOrderdetails(false, orderdetailsList, null, null);
 		}
 		else { //최초 이후 수정 : insert로 추가 레코드 생성, 상세주문 항목 추가, 금액이-이면서 부분환불
 			//아마 orders를 null로 넘기게 구현할듯
@@ -248,11 +246,7 @@ public class OrdersServiceImpl implements OrdersService {
 //			orderdetails=orderdetailsRep.findById(orderdetailsNo);
 //			List<Payment> beforePaymentList=paymentRep.findByOrdersOrderByPaymentDateDesc(orders);
 //			imp_uid=beforePaymentList.get(0).getImpUid();
-			for(Orderdetails details : orderdetails) {
-				paymentRep.save(Payment.builder().impUid(imp_uid).countPrice(amount).orders(orders).orderdetails(details).build());
-				//주문상세 테이블의 레코드 변경
-				details.setOrderdetailsPrice(0);//집계 안나오게 0처리
-			}
+			updateAmountOrderdetails(false, orderdetails, imp_uid, orders);
 		}
 	}
 
@@ -269,8 +263,17 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<Orderdetails> updateAmountOrderdetails(List<Orderdetails> orderdetailsList) {
-		// 금액변경
-		return null;
+	public List<Orderdetails> updateAmountOrderdetails(boolean isPart, List<Orderdetails> orderdetailsList, String imp_uid, Orders orders) {
+		// 금액변경->주문금액 변경적용(리스트속 있는 상세내역 금액0처리)
+		for(Orderdetails details : orderdetailsList) {
+			//주문상세 테이블의 레코드 변경
+			details.setOrderdetailsPrice(0);//집계 안나오게 0처리
+			if(isPart==true) { //부분환불이면 내용 추가
+				paymentRep.save(Payment.builder().impUid(imp_uid)
+						.countPrice(details.getOrderdetailsPrice()).orders(orders)
+						.orderdetails(details).build());
+			}
+		}
+		return orderdetailsList;
 	}
 }

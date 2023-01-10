@@ -120,5 +120,5 @@ public interface OrdersService {
 	 * 전체환불, 부분환불
 	 * 주문 금액 0처리
 	 */
-	List<Orderdetails> updateAmountOrderdetails(List<Orderdetails> orderdetailsList);
+	List<Orderdetails> updateAmountOrderdetails(boolean isPart, List<Orderdetails> orderdetailsList, String imp_uid, Orders orders);
 }
