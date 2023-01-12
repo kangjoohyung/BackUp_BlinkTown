@@ -121,4 +121,10 @@ public interface OrdersService {
 	 * 주문 금액 0처리
 	 */
 	List<Orderdetails> updateAmountOrderdetails(boolean isPart, List<Orderdetails> orderdetailsList, String imp_uid, Orders orders);
+	
+	/**
+	 * 환불, 취소 통합 메소드
+	 * 상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경 메소드 넣을 서비스
+	 */
+	void totalCancel(Long ordersNo, String status, String imp_uid, Users users, boolean isPart);
 }
