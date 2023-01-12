@@ -140,7 +140,7 @@ public class OrdersServiceImpl implements OrdersService {
 		List<Orderdetails> finishOrderdetailsList=orderdetailsRep.saveAll(orderdetailsList);
 		
 		//3) 연관 정보 변경-상품/유저
-		updateRelationOrders(users, finishOrderdetailsList, true); //메소드로 분리, 리팩토링
+		updateRelationOrders(users, finishOrderdetailsList, true); //메소드로 분리, 리팩토링-delete와 공용사용
 		
 		//주문번호로 결제호출 위해 컨트롤러로 리턴
 		finishOrders.setOrderdetailsList(finishOrderdetailsList);
@@ -270,5 +270,15 @@ public class OrdersServiceImpl implements OrdersService {
 			}//if(isPart~~)끝
 		}//for문끝
 		return orderdetailsList;
+	}
+
+	@Override
+	public void totalCancel(Long ordersNo, String status, String imp_uid, Users users, boolean isPart) {
+		Orders orders=updateOrdersStatus(ordersNo, status);
+		
+		List<Orderdetails> orderdetailsList=orders.getOrderdetailsList();
+		updateRelationOrders(users, orderdetailsList, false);
+		
+		orderdetailsList=updateAmountOrderdetails(isPart, orderdetailsList, imp_uid, orders);
 	}
 }
