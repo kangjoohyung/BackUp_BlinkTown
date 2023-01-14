@@ -471,14 +471,18 @@ public class OrdersController {
 	
 	/**주문 취소*/
 //	@RequestMapping("/orders/allCancel/{ordersNo}")
-	public void allCancelOrders(@PathVariable Long ordersNo) {
-		//주문취소->상태변경, 주문금액->0, 결제->-토탈금액으로 변경
+//	@ResponseBody
+	public void allCancelOrders(@PathVariable Long ordersNo, String imp_uid) {
+		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ordersService.totalCancel(ordersNo, STATUS_ALL_CANCEL, imp_uid, users, false);
 	}
 	
 	/**부분 환불*/
 //	@RequestMapping("/orders/partCancel/{orderdetailsNo}")
-	public void partCancelOrderdetails(@PathVariable Long orderdetailsNo) {
-		//상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경
+//	@RequestMapping("/orders/partCancel")
+//	@ResponseBody
+	public void partCancelOrderdetails(List<Orderdetails> partCancelList/* @PathVariable Long orderdetailsNo */) {
+		//상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경 /액터 : 고객, 마이페이지에서 실행
 	}
 	
 	/////////////////////////////////////////////////////////////
