@@ -258,7 +258,7 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 
 	@Override
-	public List<Orderdetails> updateAmountOrderdetails(boolean isPart, List<Orderdetails> orderdetailsList, String imp_uid, Orders orders) {
+	public void updateAmountOrderdetails(boolean isPart, List<Orderdetails> orderdetailsList, String imp_uid, Orders orders) {
 		// 금액변경->주문금액 변경적용(리스트속 있는 상세내역 금액0처리)
 		for(Orderdetails details : orderdetailsList) {
 			//주문상세 테이블의 레코드 변경
@@ -269,16 +269,16 @@ public class OrdersServiceImpl implements OrdersService {
 						.orderdetails(details).build());
 			}//if(isPart~~)끝
 		}//for문끝
-		return orderdetailsList;
 	}
 
 	@Override
-	public void totalCancel(Long ordersNo, String status, String imp_uid, Users users, boolean isPart) {
+	public void totalCancel(Long ordersNo, String status, 
+			String imp_uid, Users users, boolean isPart, List<Orderdetails> partCancelList) {
 		Orders orders=updateOrdersStatus(ordersNo, status);
 		
-		List<Orderdetails> orderdetailsList=orders.getOrderdetailsList();
-		updateRelationOrders(users, orderdetailsList, false);
+		if(isPart==false) partCancelList=orders.getOrderdetailsList();
+		updateRelationOrders(users, partCancelList, false);
 		
-		orderdetailsList=updateAmountOrderdetails(isPart, orderdetailsList, imp_uid, orders);
+		updateAmountOrderdetails(isPart, partCancelList, imp_uid, orders);
 	}
 }
