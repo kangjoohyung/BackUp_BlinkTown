@@ -469,20 +469,23 @@ public class OrdersController {
 		ordersService.updateOrdersStatus(ordersNo, status);
 	}
 	
-	/**주문 취소*/
+	/**주문 취소 : 취소후 DB변경 -> 리턴필요?? / 환불페이지? 주문내역에서 바로? -> 팝업창 띄워서 확인후 ajax로 진행*/
 //	@RequestMapping("/orders/allCancel/{ordersNo}")
 //	@ResponseBody
 	public void allCancelOrders(@PathVariable Long ordersNo, String imp_uid) {
 		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		ordersService.totalCancel(ordersNo, STATUS_ALL_CANCEL, imp_uid, users, false);
+		ordersService.totalCancel(ordersNo, STATUS_ALL_CANCEL, imp_uid, users, false, null);
 	}
 	
-	/**부분 환불*/
+	/**부분 환불 : 환불후 DB변경 -> 리턴값 필요?? / 환불페이지? 주문내역에서 바로? -> 팝업창 띄워서 확인후 ajax로 진행*/
 //	@RequestMapping("/orders/partCancel/{orderdetailsNo}")
 //	@RequestMapping("/orders/partCancel")
+//	@RequestMapping("/orders/partCancel/{ordersNo}")
 //	@ResponseBody
-	public void partCancelOrderdetails(List<Orderdetails> partCancelList/* @PathVariable Long orderdetailsNo */) {
+	public void partCancelOrderdetails(@PathVariable Long ordersNo, List<Orderdetails> partCancelList, String imp_uid/* @PathVariable Long orderdetailsNo */) {
 		//상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경 /액터 : 고객, 마이페이지에서 실행
+		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ordersService.totalCancel(ordersNo, STATUS_PART_CANCEL, imp_uid, users, true, partCancelList);
 	}
 	
 	/////////////////////////////////////////////////////////////
