@@ -125,8 +125,17 @@ public class OrdersController {
 		
 	}
 	
-	/**ajax용*/
-	
+	/**ajax용(분리) 주문리스트*/
+//	@RequestMapping("/mypage/orderList")
+	public List<Orders> ordersListByUsers() {
+		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ordersService.selectByUsers(users);
+	}
+	/**ajax용(분리) 주문상세리스트->DTO사용할지?*/
+//	@RequestMapping("/mypage/orderdetailsList/{ordersNo}")
+	public List<Orderdetails> selectAllorderdetails(@PathVariable Long ordersNo){
+		return ordersService.selectAllOrderdetails(ordersNo);
+	}
 	////////////////////////////////////////////////////////////
 	
 	/**
@@ -406,13 +415,6 @@ public class OrdersController {
 		List<Orderdetails> orderdetailsList=ordersService.selectAllOrderdetails(ordersNo);
 		model.addAttribute("orderdetailsList", orderdetailsList);
 	}//유저 상세조회 끝
-	
-	/**ajax처리용 메소드*/
-//	@RequestMapping("/유저/마이페이지/주문상세페이지/{ordersNo}")
-	public List<Orderdetails> selectAllorderdetails(@PathVariable Long ordersNo){
-		return ordersService.selectAllOrderdetails(ordersNo);
-	}
-	
 	
 	////////////////////////////////////////////////////
 	
