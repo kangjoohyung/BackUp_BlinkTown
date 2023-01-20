@@ -11,6 +11,7 @@ import web.mvc.domain.Orders;
 import web.mvc.domain.Payment;
 import web.mvc.domain.Users;
 import web.mvc.dto.Cart;
+import web.mvc.dto.OrdersDTO;
 
 public interface OrdersService {
 
@@ -44,6 +45,9 @@ public interface OrdersService {
 	 * - return : Page객체->List
 	 */
 	List<Orderdetails> selectAllOrderdetails(Long ordersNo);
+
+	/**DTO에 데이터 담아 리턴(개별 조회)*/
+	OrdersDTO selectOneOrdersAndOrderdetails(Long ordersNo);
 	
 	//////////////////////////////////////////////////
 	/**
