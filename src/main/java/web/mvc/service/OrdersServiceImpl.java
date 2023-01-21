@@ -18,6 +18,7 @@ import web.mvc.domain.Orders;
 import web.mvc.domain.Payment;
 import web.mvc.domain.Product;
 import web.mvc.domain.Users;
+import web.mvc.dto.OrdersDTO;
 import web.mvc.repository.OrderdetailsRepository;
 import web.mvc.repository.OrdersRepository;
 import web.mvc.repository.PaymentRepository;
@@ -52,6 +53,20 @@ public class OrdersServiceImpl implements OrdersService {
 	public List<Orders> selectByUsers(Users users) {
 		List<Orders> ordersList=ordersRep.findByUsersOrderByOrdersDateDesc(users);
 		return ordersList;
+	}
+
+	@Override
+	public OrdersDTO selectOneOrdersAndOrderdetails(Long OrdersNo) {
+		Orders orders=ordersRep.findById(OrdersNo).orElse(null);
+		int amount=0;
+		for(Orderdetails orderdetails:orders.getOrderdetailsList()) {
+			amount+=orderdetails.getOrderdetailsPrice();
+		}
+		OrdersDTO ordersDTO=new OrdersDTO(OrdersNo, orders.getUsers(), 
+				orders.getOrdersReceiverName(), orders.getOrdersReceiverPhone(), 
+				orders.getOrdersAddr(), orders.getOrdersZipcode(), orders.getOrdersStatus(), 
+				orders.getOrdersDate(), orders.getOrderdetailsList(), amount);		
+		return ordersDTO;
 	}
 	
 	@Override
