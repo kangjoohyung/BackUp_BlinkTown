@@ -132,10 +132,17 @@ public class OrdersController {
 		return ordersService.selectByUsers(users);
 	}
 	/**ajax용(분리) 주문상세리스트->DTO사용할지?*/
-//	@RequestMapping("/mypage/orderdetailsList/{ordersNo}")
+//	@RequestMapping("/mypage/
 	public List<Orderdetails> selectAllorderdetails(@PathVariable Long ordersNo){
 		return ordersService.selectAllOrderdetails(ordersNo);
 	}
+	/**개별 DTO 리턴 메소드(주문상세+DTO데이터)*/
+//	@RequestMapping("/mypage/orderdetailsList/{ordersNo}")
+	public OrdersDTO selectOneOrdersDTOandDetails(@PathVariable Long ordersNo) {
+		return ordersService.selectOneOrdersAndOrderdetails(ordersNo);
+	}
+	
+
 	////////////////////////////////////////////////////////////
 	
 	/**
