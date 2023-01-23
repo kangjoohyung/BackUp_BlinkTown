@@ -59,10 +59,12 @@ public class OrdersController {
 	private final static int PAGE_COUNT=10;//페이지당 출력 숫자
 	private final static int BLOCK_COUNT=10;//
 	
-	private final static String STATUS_BEFORE="결제중";
-	private final static String STATUS_AFTER="주문완료";
-	private final static String STATUS_ALL_CANCEL="주문취소";
-	private final static String STATUS_PART_CANCEL="부분환불";
+	private final static String STATUS_BEFORE="결제중"; //상태int1
+	private final static String STATUS_AFTER="주문완료"; //상태int2
+	private final static String STATUS_DELIEVERING="배송중"; //상태int3
+	private final static String STATUS_ARRIVE="배송완료"; //상태int4
+	private final static String STATUS_ALL_CANCEL="주문취소"; //상태int5
+	private final static String STATUS_PART_CANCEL="부분환불"; //상태int6
 	
 	//유저 정보 받아오기 : Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
@@ -131,7 +133,7 @@ public class OrdersController {
 		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return ordersService.selectByUsers(users);
 	}
-	/**ajax용(분리) 주문상세리스트->DTO사용할지?*/
+	/**ajax용(분리) 주문상세리스트Domain->DTO사용할지?*/
 //	@RequestMapping("/mypage/
 	public List<Orderdetails> selectAllorderdetails(@PathVariable Long ordersNo){
 		return ordersService.selectAllOrderdetails(ordersNo);
@@ -474,18 +476,39 @@ public class OrdersController {
 	 * 기능들
 	 * 3) 주문 번호별 주문상세 전체 조회
 	 */
-//	@RequestMapping("/관리자/주문상세페이지/{ordersNo}")
+//	@RequestMapping("/관리자/주문상세페이지/{ordersNo}") //위의 ajax 메소드로 사용
 	public void selectAllOrderdetailsAdmin(Model model, @PathVariable Long ordersNo) {
 		List<Orderdetails> orderdetailsList=ordersService.selectAllOrderdetails(ordersNo);
 		model.addAttribute("orderdetailsList", orderdetailsList);
 	}//관리자 주문 상세 끝
-	
+
 	/////////////////////////////////////////////////////////////
-	/**배송정보 변경*/
-//	@RequestMapping("/admin/orders/updateStatus/{ordersNo}/{status}")
-	public void updateStatus(@PathVariable Long ordersNo, @PathVariable String status) {
-		ordersService.updateOrdersStatus(ordersNo, status);
+	/**ajax관리자-배송상태별 주문 조회->전체조회에도 사용*/
+	
+	/**배송상태 변환 메소드*/
+	public String transformStatusByInteger(Integer statusNumber) {
+		String status=null;
+		if(statusNumber==null) statusNumber=0;
+		switch (statusNumber) {
+		case 1: status=STATUS_BEFORE; break;
+		case 2: status=STATUS_AFTER; break;
+		case 3: status=STATUS_DELIEVERING; break;
+		case 4: status=STATUS_ARRIVE; break;
+		case 5: status=STATUS_ALL_CANCEL; break;
+		case 6: status=STATUS_PART_CANCEL; break;
+		default: status="%"; break;//전체조회
+		}
+		return status;
 	}
+	
+	/**ajax관리자-배송상태 변경*/
+//	@RequestMapping("/admin/orders/updateStatus/{ordersNo}/{statusNumber}")
+	public List<Orders> updateStatus(@PathVariable Long ordersNo, @PathVariable int statusNumber) {
+		String status=transformStatusByInteger(statusNumber);
+		ordersService.updateOrdersStatus(ordersNo, status);
+		return ordersService.allOrdersByStatus(status);		
+	}
+	/////////////////////////////////////////////////////////////
 	
 	/**주문 취소 : 취소후 DB변경 -> 리턴필요?? / 환불페이지? 주문내역에서 바로? -> 팝업창 띄워서 확인후 ajax로 진행*/
 //	@RequestMapping("/orders/allCancel/{ordersNo}")
