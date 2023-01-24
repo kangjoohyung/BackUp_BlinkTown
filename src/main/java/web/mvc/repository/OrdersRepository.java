@@ -36,4 +36,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> , Querydsl
 	 * 전체 주문 조회->user id not null인 경우로 조건 넣기
 	 */
 	List<Orders> findByUsersIsNotNullOrderByOrdersDateDesc();
+	
+	/** 배송상태로 주문목록 조회 */
+	List<Orders> findByOrdersStatusOrderByOrdersDateDesc(String status);
 }
