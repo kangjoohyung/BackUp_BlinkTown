@@ -49,6 +49,9 @@ public interface OrdersService {
 	/**DTO에 데이터 담아 리턴(개별 조회)*/
 	OrdersDTO selectOneOrdersAndOrderdetails(Long ordersNo);
 	
+	/**배송 상태에 따른 주문 조회*/
+	List<Orders> allOrdersByStatus(String status);
+	
 	//////////////////////////////////////////////////
 	/**
 	 * 카트DTO에서 상품 담고 체크하는 메소드
