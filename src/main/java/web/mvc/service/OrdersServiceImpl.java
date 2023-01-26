@@ -70,6 +70,11 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 	
 	@Override
+	public List<Orders> allOrdersByStatus(String status) {
+		return ordersRep.findByOrdersStatusOrderByOrdersDateDesc(status);
+	}
+	
+	@Override
 //	public List<Orders> selectAllOrders(int inCase, Users users, String startDate, String finalDate) {
 	public Page<Orders> selectAllOrders(int inCase, Users users, String startDate, String finalDate, Pageable pageable) {
 		Page<Orders> ordersList=null;
@@ -296,4 +301,5 @@ public class OrdersServiceImpl implements OrdersService {
 		
 		updateAmountOrderdetails(isPart, partCancelList, imp_uid, orders);
 	}
+
 }
