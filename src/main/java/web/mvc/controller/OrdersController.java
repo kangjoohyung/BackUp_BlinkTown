@@ -484,6 +484,13 @@ public class OrdersController {
 
 	/////////////////////////////////////////////////////////////
 	/**ajax관리자-배송상태별 주문 조회->전체조회에도 사용*/
+//	@RequestMapping("/admin/orders/{statusNumber}")
+	public List<Orders> ordersByStatus(Integer statusNumber) {
+		String status=transformStatusByInteger(statusNumber);
+		return ordersService.selectAllOrdersByStatus(status);
+	}
+	
+	/**ajax관리자-기간별, 배송상태 등등 옵션DTO 수신*/
 	
 	/**배송상태 변환 메소드*/
 	public String transformStatusByInteger(Integer statusNumber) {
@@ -503,10 +510,10 @@ public class OrdersController {
 	
 	/**ajax관리자-배송상태 변경*/
 //	@RequestMapping("/admin/orders/updateStatus/{ordersNo}/{statusNumber}")
-	public List<Orders> updateStatus(@PathVariable Long ordersNo, @PathVariable int statusNumber) {
+	public List<Orders> updateStatus(@PathVariable Long ordersNo, @PathVariable Integer statusNumber) {
 		String status=transformStatusByInteger(statusNumber);
 		ordersService.updateOrdersStatus(ordersNo, status);
-		return ordersService.allOrdersByStatus(status);		
+		return ordersService.selectAllOrdersByStatus(status);	
 	}
 	/////////////////////////////////////////////////////////////
 	
