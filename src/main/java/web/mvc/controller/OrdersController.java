@@ -24,6 +24,7 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
+import lombok.RequiredArgsConstructor;
 import web.mvc.domain.Authority;
 import web.mvc.domain.Orderdetails;
 import web.mvc.domain.Orders;
@@ -35,36 +36,37 @@ import web.mvc.service.CartService;
 import web.mvc.service.OrdersService;
 import web.mvc.service.ProductService;
 import web.mvc.service.UsersService;
+import web.mvc.util.OrdersStatusConstants;
 
 //@RestController
 @Controller
 //@RequestMapping("/orders")
 @RequestMapping
+@RequiredArgsConstructor
 public class OrdersController {
+	private final OrdersService ordersService;
+	private final OrdersVerifyController ordersVerifyController;
+	private final ProductService productService;
+	private final CartService cartService;
+	private final UsersService usersService;
 	
-	@Autowired
-	private OrdersService ordersService;
-	@Autowired
-	private OrdersVerifyController ordersVerifyController;
-	@Autowired
-	private ProductService productService;
-	@Autowired
-	private CartService cartService;
-	
-	@Autowired
-	private UsersService usersService;
+//	@Autowired
+//	private UsersService usersService;
+//	@Autowired
+//	private OrdersService ordersService;
+//	@Autowired
+//	private OrdersVerifyController ordersVerifyController;
+//	@Autowired
+//	private ProductService productService;
+//	@Autowired
+//	private CartService cartService;
+//	@Autowired
+//	private UsersService usersService;
 	
 	/**상수관리*/
 	//페이지 사용 안함..
-	private final static int PAGE_COUNT=10;//페이지당 출력 숫자
-	private final static int BLOCK_COUNT=10;//
-	
-	private final static String STATUS_BEFORE="결제중"; //상태int1
-	private final static String STATUS_AFTER="주문완료"; //상태int2
-	private final static String STATUS_DELIEVERING="배송중"; //상태int3
-	private final static String STATUS_ARRIVE="배송완료"; //상태int4
-	private final static String STATUS_ALL_CANCEL="주문취소"; //상태int5
-	private final static String STATUS_PART_CANCEL="부분환불"; //상태int6
+//	private final static int PAGE_COUNT=10;//페이지당 출력 숫자
+//	private final static int BLOCK_COUNT=10;//
 	
 	//유저 정보 받아오기 : Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
@@ -269,7 +271,7 @@ public class OrdersController {
 		System.out.println("amount="+amount);//확인용
 		
 		//주문상태 결제중으로 입력
-		orders.setOrdersStatus(STATUS_BEFORE);
+		orders.setOrdersStatus(OrdersStatusConstants.STATUS_BEFORE);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Users users=(Users)auth.getPrincipal();
 //		Users users=Users.builder().usersId("user").build(); //테스트용 생성
@@ -321,7 +323,7 @@ public class OrdersController {
 		int verifyAmount=resultData.getResponse().getAmount().intValueExact();
 		
 		//금액을 비교하여 검증(금액 다를시 주문내역 삭제 및 재고량 원복후 runtimeException발생시킴)
-		ordersService.verifyOrders(ordersNo, verifyAmount, STATUS_AFTER, imp_uid);
+		ordersService.verifyOrders(ordersNo, verifyAmount, OrdersStatusConstants.STATUS_AFTER, imp_uid);
 		
 		//이상 없을시 장바구니 세션 삭제->dto삭제 메소드 호출
 //		Users users=(Users)principal;
@@ -476,7 +478,7 @@ public class OrdersController {
 	 * 기능들
 	 * 3) 주문 번호별 주문상세 전체 조회
 	 */
-//	@RequestMapping("/관리자/주문상세페이지/{ordersNo}") //위의 ajax 메소드로 사용
+//	@RequestMapping("/관리자/주문상세페이지/{ordersNo}")
 	public void selectAllOrderdetailsAdmin(Model model, @PathVariable Long ordersNo) {
 		List<Orderdetails> orderdetailsList=ordersService.selectAllOrderdetails(ordersNo);
 		model.addAttribute("orderdetailsList", orderdetailsList);
@@ -484,31 +486,41 @@ public class OrdersController {
 
 	/////////////////////////////////////////////////////////////
 	/**ajax관리자-배송상태별 주문 조회->전체조회에도 사용*/
+//	@ResponseBody
 //	@RequestMapping("/admin/orders/{statusNumber}")
-	public List<Orders> ordersByStatus(Integer statusNumber) {
+	public List<Orders> ordersByStatus(@PathVariable Integer statusNumber) {
 		String status=transformStatusByInteger(statusNumber);
 		return ordersService.selectAllOrdersByStatus(status);
 	}
 	
-	/**ajax관리자-기간별, 배송상태 등등 옵션DTO 수신*/
+	/**ajax관리자-기간별, 배송상태 등등 옵션DTO 수신->필요없나? 보류중*/
+	
+	/**ajax관리자-아이디or사용자 이름or주문번호로 주문 검색*/
+//	@ResponseBody
+//	@RequestMapping("/admin/selectOrders")
+	/*옵션코드 List로 중복옵션 허용->dto에 있음*/
+	/*검색용 옵션 : 1-상태코드로 검색, 2-아이디로 검색, 3-이름으로검색, 4-주문번호로 검색, 5-날짜로 검색 등등*/
+	
+	
 	
 	/**배송상태 변환 메소드*/
 	public String transformStatusByInteger(Integer statusNumber) {
 		String status=null;
 		if(statusNumber==null) statusNumber=0;
 		switch (statusNumber) {
-		case 1: status=STATUS_BEFORE; break;
-		case 2: status=STATUS_AFTER; break;
-		case 3: status=STATUS_DELIEVERING; break;
-		case 4: status=STATUS_ARRIVE; break;
-		case 5: status=STATUS_ALL_CANCEL; break;
-		case 6: status=STATUS_PART_CANCEL; break;
+		case 1: status=OrdersStatusConstants.STATUS_BEFORE; break;
+		case 2: status=OrdersStatusConstants.STATUS_AFTER; break;
+		case 3: status=OrdersStatusConstants.STATUS_DELIEVERING; break;
+		case 4: status=OrdersStatusConstants.STATUS_ARRIVE; break;
+		case 5: status=OrdersStatusConstants.STATUS_ALL_CANCEL; break;
+		case 6: status=OrdersStatusConstants.STATUS_PART_CANCEL; break;
 		default: status="%"; break;//전체조회
 		}
 		return status;
 	}
 	
 	/**ajax관리자-배송상태 변경*/
+//	@ResponseBody
 //	@RequestMapping("/admin/orders/updateStatus/{ordersNo}/{statusNumber}")
 	public List<Orders> updateStatus(@PathVariable Long ordersNo, @PathVariable Integer statusNumber) {
 		String status=transformStatusByInteger(statusNumber);
@@ -522,7 +534,7 @@ public class OrdersController {
 //	@ResponseBody
 	public void allCancelOrders(@PathVariable Long ordersNo, String imp_uid) {
 		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		ordersService.totalCancel(ordersNo, STATUS_ALL_CANCEL, imp_uid, users, false, null);
+		ordersService.totalCancel(ordersNo, OrdersStatusConstants.STATUS_ALL_CANCEL, imp_uid, users, false, null);
 	}
 	
 	/**부분 환불 : 환불후 DB변경 -> 리턴값 필요?? / 환불페이지? 주문내역에서 바로? -> 팝업창 띄워서 확인후 ajax로 진행*/
@@ -533,7 +545,7 @@ public class OrdersController {
 	public void partCancelOrderdetails(@PathVariable Long ordersNo, List<Orderdetails> partCancelList, String imp_uid/* @PathVariable Long orderdetailsNo */) {
 		//상태변경->부분환불, 주문금액->해당 상세내역만큼 합산, 결제-> 해당내역금액 - 로 변경 /액터 : 고객, 마이페이지에서 실행
 		Users users=(Users)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		ordersService.totalCancel(ordersNo, STATUS_PART_CANCEL, imp_uid, users, true, partCancelList);
+		ordersService.totalCancel(ordersNo, OrdersStatusConstants.STATUS_PART_CANCEL, imp_uid, users, true, partCancelList);
 	}
 	
 	/////////////////////////////////////////////////////////////
