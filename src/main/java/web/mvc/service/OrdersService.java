@@ -11,6 +11,7 @@ import web.mvc.domain.Orders;
 import web.mvc.domain.Payment;
 import web.mvc.domain.Users;
 import web.mvc.dto.Cart;
+import web.mvc.dto.OptionDTO;
 import web.mvc.dto.OrdersDTO;
 
 public interface OrdersService {
@@ -50,7 +51,10 @@ public interface OrdersService {
 	OrdersDTO selectOneOrdersAndOrderdetails(Long ordersNo);
 	
 	/**배송 상태에 따른 주문 조회*/
-	List<Orders> allOrdersByStatus(String status);
+	List<Orders> selectAllOrdersByStatus(String status);
+	
+	/**주문조회-option DTO 사용하여 분류하는 메소드*/
+	List<Orders> selectOrdersByOptionDTO(OptionDTO options);
 	
 	//////////////////////////////////////////////////
 	/**
